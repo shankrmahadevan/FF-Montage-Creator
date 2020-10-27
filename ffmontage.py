@@ -98,7 +98,7 @@ class FFMontage:
                             bar.update(1)
                             i += 1
                         start_time = current_time - datetime.timedelta(seconds=2)
-                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 25 -to {end_time.time()} -c:a copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
+                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 27 -to {end_time.time()} -c:v copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
                         subprocess.run([process_str], shell=True)
                         text_file.write(f'file {self.concat_dir}/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
