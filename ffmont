@@ -62,8 +62,11 @@ class FFMontage:
         return
 
     def video_process(self):
+        array = []
         if not os.path.exists(self.concat_dir):
             os.mkdir(self.concat_dir)
+        if not os.path.exists(self.output_dir):
+            os.mkdir(self.output_dir)
         cap = cv2.VideoCapture(self.video_path)
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         fps = cap.get(cv2.CAP_PROP_FPS)
