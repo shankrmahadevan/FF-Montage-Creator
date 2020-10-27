@@ -101,7 +101,7 @@ class FFMontage:
                         start_time = current_time - datetime.timedelta(seconds=2)
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
                         subprocess.run([process_str], shell=True)
-                        text_file.write(f'file {self.txt_concat}/{str(vid_no)}.mp4\n')
+                        text_file.write(f'file toconcat/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
                         current_time = end_time
@@ -126,5 +126,5 @@ class FFMontage:
         concat_file_name = f'{now}.mp4'
         ffmpeg_cmd = f"ffmpeg -safe 0 -f concat -segment_time_metadata 1 -i temp/text_file.txt -vf select=concatdec_select -af aselect=concatdec_select,aresample=async=1 -preset ultrafast -max_muxing_queue_size 9999 " + concat_file_name
         subprocess.run([ffmpeg_cmd], shell=True)
-        shutil.rmtree('temp/')
+#         shutil.rmtree('temp/')
         
