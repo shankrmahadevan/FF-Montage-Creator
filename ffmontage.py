@@ -56,9 +56,8 @@ class FFMontage:
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive Link")
         if 'drive' in link:
-            output = self.video_path
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
-            gdown.download(video_link, output, quiet=True)
+            gdown.download(video_link, self.video_path, quiet=True)
         else:
             print("Check Your Link")
         return
