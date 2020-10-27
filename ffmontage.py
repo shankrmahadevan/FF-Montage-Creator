@@ -4,8 +4,6 @@ import glob
 import sys
 from tqdm import tqdm
 from zipfile import ZipFile
-import string
-import random
 import gdown
 import subprocess
 import datetime
@@ -13,14 +11,12 @@ import multiprocessing as mp
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
 import tensorflow as tf
-from tensorflow.keras.applications.inception_resnet_v2 import InceptionResNetV2
-from tensorflow.keras.layers import Conv2D, Dense, GlobalAveragePooling2D
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import ModelCheckpoint
 
+
+def part_mult(start, end, partition_cmds):
+    
 
 class FFMontage:
     def __init__(self, time_interval=2):
@@ -29,8 +25,8 @@ class FFMontage:
         self.model = self.download_model()
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
-        self.num_processes = mp.cpu_count()
         self.partition_cmds = []
+        self.download_video()
 
     def download_model(self):
         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
@@ -67,18 +63,8 @@ class FFMontage:
         else:
             print("Check Your Link")
         return
-    
-    def video_part_mult(part_no):
-      pbar = tqdm(total=len(partition_cmds))
-      start = (len(self.partition_cmds)//self.num_processes)*part_no
-      end = (len(self.partition_cmds)//self.num_processes)*(part_no+1)
-      for process_str in self.partition_cmds[start:end]:
-          subprocess.run([process_str], shell=True)
-          pbar.update(1)
-      pbar.close()
 
     def video_process(self):
-        self.download_video()
         text_file = open('temp/text_file.txt', 'a')
         if not os.path.exists(self.concat_dir):
             os.mkdir(self.concat_dir)
@@ -137,12 +123,22 @@ class FFMontage:
                 return
         bar.close()
         cap.release()
-        p = mp.Pool(self.num_processes)
-        p.map(self.video_part_mult, range(self.num_processes)) 
-       
-        now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
-        concat_file_name = f'{now}.mp4'
-        concat_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy {concat_file_name}"
-        subprocess.run([concat_cmd], shell=True)
         text_file.close()
-        shutil.rmtree('temp/')
+        
+        
+def video_part_mult(part_no):
+      start = (len(extractor.partition_cmds)//num_processes)*part_no
+      end = (len(extractor.partition_cmds)//num_processes)*(part_no+1)
+      for process_str in tqdm(extractor.partition_cmds[start:end]):
+          subprocess.run([process_str], shell=True)
+    
+def concat_video():
+    num_processes = mp.cpu_count()
+    p = mp.Pool(num_processes)
+    p.map(video_part_mult, range(num_processes)) 
+
+    now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
+    concat_file_name = f'{now}.mp4'
+    concat_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy {concat_file_name}"
+    subprocess.run([concat_cmd], shell=True)
+    shutil.rmtree('temp/')
