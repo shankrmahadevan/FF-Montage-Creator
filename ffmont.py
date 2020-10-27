@@ -80,7 +80,7 @@ class FFMontage:
 
         current_time = datetime.datetime(1, 2, 3, hour=0, minute=0, second=0)
         end_time = datetime.datetime(1, 2, 3, hour=0, minute=0, second=0)
-	array = []	
+	    array = []	
         while cap.isOpened():
            # try:
                 ret, frame = cap.read()
