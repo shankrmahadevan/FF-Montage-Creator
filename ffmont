@@ -124,4 +124,6 @@ class FFMontage:
                 return
         bar.close()
         cap.release()
+        string = f'ffmpeg -r {fps} -i {self.output_dir}/%d.jpg -c:v libx264 -pix_fmt yuv420p -crf 23 -r {fps} -y montage.mp4'
+        subprocess.run([string], shell=True)
         
