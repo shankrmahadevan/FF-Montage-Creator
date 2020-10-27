@@ -20,6 +20,7 @@ from tensorflow.keras.layers import Conv2D, Dense, GlobalAveragePooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint
 
+
 class FFMontage:
     def __init__(self, time_interval=2):
         self.video_path = 'temp/download.mp4'
@@ -73,7 +74,7 @@ class FFMontage:
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         fps = cap.get(cv2.CAP_PROP_FPS)
         duration = total_frames / fps
-
+        partition_cmds = []
         buffer_size = self.time_interval * fps
 
         current_frame_no = 0
@@ -103,7 +104,7 @@ class FFMontage:
                             i += 1
                         start_time = current_time - datetime.timedelta(seconds=2)
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 18 -to {end_time.time()} -c:a copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
-                        subprocess.run([process_str], shell=True)
+                        partition_cmds.append(process_str)
                         text_file.write(f'file {self.concat_dir}/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
@@ -124,6 +125,11 @@ class FFMontage:
                 return
         bar.close()
         cap.release()
+        pbar = tqdm(total=len(partition_cmds))
+        for process_str in partition_cmds:
+            subprocess.run([process_str], shell=True)
+            pbar.update(1)
+        pbar.close()
         now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
         concat_file_name = f'{now}.mp4'
         concat_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy {concat_file_name}"
