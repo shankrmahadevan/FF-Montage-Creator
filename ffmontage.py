@@ -98,7 +98,7 @@ class FFMontage:
                             current_frame_no += 1
                             bar.update(1)
                             i += 1
-                        start_time = current_time - datetime.timedelta(seconds=2)
+                        start_time = current_time - datetime.timedelta(seconds=self.time_interval)
 #                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -vn -q:a 0 -map a {self.concat_dir}/{str(vid_no)}.mp3'
                         subprocess.run([process_str], shell=True)
