@@ -29,15 +29,6 @@ def download_model():
     return model
 
 
-video_path = 'temp/download.mp4'
-model_path = 'model'
-model = download_model()
-time_interval = 2
-concat_dir = 'temp/to_concat'
-num_processes = mp.cpu_count()
-partition_cmds = []
-
-
 def input_image(image_path):
     if type(image_path) == str:
         img = cv2.imread(image_path) / 255.
@@ -76,6 +67,13 @@ def video_part_mult(part_no):
 
 
 def video_process():
+    video_path = 'temp/download.mp4'
+    model_path = 'model'
+    model = download_model()
+    time_interval = 2
+    concat_dir = 'temp/to_concat'
+    num_processes = mp.cpu_count()
+    partition_cmds = []
     download_video()
     text_file = open('temp/text_file.txt', 'a')
     if not os.path.exists(concat_dir):
