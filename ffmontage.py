@@ -23,6 +23,7 @@ class FFMontage:
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
         self.partition_cmds = []
+        self.txt_concat = 'to_concat'
 
     def download_model(self):
         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
@@ -100,7 +101,7 @@ class FFMontage:
                         start_time = current_time - datetime.timedelta(seconds=2)
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
                         subprocess.run([process_str], shell=True)
-                        text_file.write(f'file {self.concat_dir.lstrip('temp/')}/{str(vid_no)}.mp4\n')
+                        text_file.write(f'file {self.txt_concat}/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
                         current_time = end_time
