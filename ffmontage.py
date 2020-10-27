@@ -56,7 +56,7 @@ class FFMontage:
         if not os.path.exists('temp'):
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
-        link = input("Enter The G-Drive Link")
+        link = input("Enter The G-Drive Link   ")
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, self.video_path, quiet=True)
@@ -91,7 +91,7 @@ class FFMontage:
                     break
                 current_time += datetime.timedelta(seconds=seconds_per_frame)
                 if current_frame_no % divisor == 0:
-                    if is_true(frame):
+                    if self.is_true(frame):
                         end_time = current_time + datetime.timedelta(seconds=self.time_interval)
                         i = 0
                         while cap.isOpened() and i < self.time_interval * fps:
