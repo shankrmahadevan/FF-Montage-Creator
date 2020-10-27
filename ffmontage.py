@@ -24,7 +24,7 @@ class FFMontage:
     def __init__(self, time_interval=2):
         self.video_path = 'temp/download.mp4'
         self.model_path = 'model'
-        self.model = tf.keras.Model()
+        self.model = self.download_model()
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
 
@@ -37,7 +37,8 @@ class FFMontage:
         with ZipFile(f'{self.model_path}/model.zip') as zipf:
             os.mkdir(f'{self.model_path}/dir')
             zipf.extractall(f'{self.model_path}/dir')
-        self.model = tf.keras.models.load_model(f'{self.model_path}/dir')
+        model = tf.keras.models.load_model(f'{self.model_path}/dir')
+        return model
 
     def input_image(self, image_path):
         if type(image_path) == str:
