@@ -28,6 +28,8 @@ class FFMontage:
         self.model = self.download_model()
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
+        self.num_processes = mp.cpu_count()
+        self.partition_cmds = []
 
     def download_model(self):
         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
@@ -64,6 +66,15 @@ class FFMontage:
         else:
             print("Check Your Link")
         return
+    
+    def video_part_mult(part_no):
+      pbar = tqdm(total=len(partition_cmds))
+      start = (len(self.partition_cmds)//self.num_processes)*part_no
+      end = (len(self.partition_cmds)//self.num_processes)*(part_no+1)
+      for process_str in self.partition_cmds[start:end]:
+          subprocess.run([process_str], shell=True)
+          pbar.update(1)
+      pbar.close()
 
     def video_process(self):
         self.download_video()
@@ -104,7 +115,7 @@ class FFMontage:
                             i += 1
                         start_time = current_time - datetime.timedelta(seconds=2)
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 18 -to {end_time.time()} -c:a copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
-                        partition_cmds.append(process_str)
+                        self.partition_cmds.append(process_str)
                         text_file.write(f'file {self.concat_dir}/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
@@ -125,11 +136,9 @@ class FFMontage:
                 return
         bar.close()
         cap.release()
-        pbar = tqdm(total=len(partition_cmds))
-        for process_str in partition_cmds:
-            subprocess.run([process_str], shell=True)
-            pbar.update(1)
-        pbar.close()
+        p = mp.Pool(self.num_processes)
+        p.map(self.video_part_mult, range(self.num_processes)) 
+       
         now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
         concat_file_name = f'{now}.mp4'
         concat_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy {concat_file_name}"
