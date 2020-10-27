@@ -53,9 +53,9 @@ class FFMontage:
         return self.model.predict(image_in)[0][0] > 0.5
 
     def download_video(self):
-        if 'drive' in video_path:
-            print("Make Sure that You have turned on Share with Everybody")
-            link = input("Enter The G-Drive Link")
+        print("Make Sure that You have turned on Share with Everybody")
+        link = input("Enter The G-Drive Link")
+        if 'drive' in link:
             output = self.video_path
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, output, quiet=True)
