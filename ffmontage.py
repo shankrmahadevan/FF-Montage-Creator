@@ -7,7 +7,7 @@ from zipfile import ZipFile
 import gdown
 import subprocess
 import datetime
-import multiprocessing as mp
+import time
 
 import cv2
 import numpy as np
@@ -101,6 +101,7 @@ class FFMontage:
                         start_time = current_time - datetime.timedelta(seconds=2)
                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
                         subprocess.run([process_str], shell=True)
+                        time.sleep(2)
                         text_file.write(f'file toconcat/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
