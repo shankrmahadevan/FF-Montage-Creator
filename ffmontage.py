@@ -15,9 +15,6 @@ import numpy as np
 import tensorflow as tf
 
 
-def part_mult(start, end, partition_cmds):
-    
-
 class FFMontage:
     def __init__(self, time_interval=2):
         self.video_path = 'temp/download.mp4'
@@ -26,7 +23,6 @@ class FFMontage:
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
         self.partition_cmds = []
-        self.download_video()
 
     def download_model(self):
         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
@@ -65,6 +61,7 @@ class FFMontage:
         return
 
     def video_process(self):
+        self.download_video()
         text_file = open('temp/text_file.txt', 'a')
         if not os.path.exists(self.concat_dir):
             os.mkdir(self.concat_dir)
@@ -101,8 +98,8 @@ class FFMontage:
                             bar.update(1)
                             i += 1
                         start_time = current_time - datetime.timedelta(seconds=2)
-                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 18 -to {end_time.time()} -c:a copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
-                        self.partition_cmds.append(process_str)
+                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -c:v libx264 -crf 25 -to {end_time.time()} -c:a copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
+                        subprocess.run([process_str], shell=True)
                         text_file.write(f'file {self.concat_dir}/{str(vid_no)}.mp4\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
@@ -124,21 +121,9 @@ class FFMontage:
         bar.close()
         cap.release()
         text_file.close()
+        now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
+        concat_file_name = f'{now}.mp4'
+        ffmpeg_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy " + concat_file_name
+        subprocess.run([ffmpeg_cmd], shell=True)
+        shutil.rmtree('temp/')
         
-        
-def video_part_mult(part_no):
-      start = (len(extractor.partition_cmds)//num_processes)*part_no
-      end = (len(extractor.partition_cmds)//num_processes)*(part_no+1)
-      for process_str in tqdm(extractor.partition_cmds[start:end]):
-          subprocess.run([process_str], shell=True)
-    
-def concat_video():
-    num_processes = mp.cpu_count()
-    p = mp.Pool(num_processes)
-    p.map(video_part_mult, range(num_processes)) 
-
-    now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
-    concat_file_name = f'{now}.mp4'
-    concat_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy {concat_file_name}"
-    subprocess.run([concat_cmd], shell=True)
-    shutil.rmtree('temp/')
