@@ -123,7 +123,7 @@ class FFMontage:
         text_file.close()
         now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
         concat_file_name = f'{now}.mp4'
-        ffmpeg_cmd = f"ffmpeg -y -loglevel error -f concat -safe 0 -i temp/text_file.txt -vcodec copy " + concat_file_name
+        ffmpeg_cmd = f"ffmpeg -f concat -safe 0 -i temp/text_file.txt -c copy " + concat_file_name
         subprocess.run([ffmpeg_cmd], shell=True)
-        shutil.rmtree('temp/')
+#         shutil.rmtree('temp/')
         
