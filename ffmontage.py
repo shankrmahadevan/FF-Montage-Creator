@@ -99,10 +99,11 @@ class FFMontage:
                             bar.update(1)
                             i += 1
                         start_time = current_time - datetime.timedelta(seconds=2)
-                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
+#                         process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -c copy -preset ultrafast {self.concat_dir}/{str(vid_no)}.mp4'
+                        process_str = f'ffmpeg -i {self.video_path} -ss {start_time.time()} -to {end_time.time()} -vn -q:a 0 -map a {self.concat_dir}/{str(vid_no)}.mp3'
                         subprocess.run([process_str], shell=True)
                         time.sleep(2)
-                        text_file.write(f'file toconcat/{str(vid_no)}.mp4\n')
+                        text_file.write(f'file toconcat/{str(vid_no)}.mp3\n')
                         bar.set_postfix_str(f'Partitions : {vid_no}')
                         vid_no += 1
                         current_time = end_time
@@ -125,7 +126,8 @@ class FFMontage:
         text_file.close()
         now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
         concat_file_name = f'{now}.mp4'
-        ffmpeg_cmd = f"ffmpeg -safe 0 -f concat -segment_time_metadata 1 -i temp/text_file.txt -vf select=concatdec_select -af aselect=concatdec_select,aresample=async=1 -preset ultrafast -max_muxing_queue_size 9999 " + concat_file_name
+#         ffmpeg_cmd = f"ffmpeg -safe 0 -f concat -segment_time_metadata 1 -i temp/text_file.txt -vf select=concatdec_select -af aselect=concatdec_select,aresample=async=1 -preset ultrafast -max_muxing_queue_size 9999 " + concat_file_name
+        ffmpeg_cmd = f'ffmpeg -i temp/text_file.txt -acodec copy audio.mp3'
         subprocess.run([ffmpeg_cmd], shell=True)
 #         shutil.rmtree('temp/')
         
