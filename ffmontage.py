@@ -53,6 +53,8 @@ class FFMontage:
         return self.model.predict(image_in)[0][0] > 0.5
 
     def download_video(self):
+        if not os.path.exists('temp'):
+            os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive Link")
         if 'drive' in link:
