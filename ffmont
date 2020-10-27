@@ -17,6 +17,7 @@ import tensorflow as tf
 
 class FFMontage:
     def __init__(self, time_interval=2):
+        self.output_dir = 'frames'
         self.video_path = 'temp/download.mp4'
         self.model_path = 'model'
         self.model = self.download_model()
