@@ -62,7 +62,6 @@ class FFMontage:
         return
 
     def video_process(self):
-        array = []
         if not os.path.exists(self.concat_dir):
             os.mkdir(self.concat_dir)
         if not os.path.exists(self.output_dir):
@@ -81,8 +80,9 @@ class FFMontage:
 
         current_time = datetime.datetime(1, 2, 3, hour=0, minute=0, second=0)
         end_time = datetime.datetime(1, 2, 3, hour=0, minute=0, second=0)
+	array = []	
         while cap.isOpened():
-            try:
+           # try:
                 ret, frame = cap.read()
                 if not ret:
                     break
@@ -119,14 +119,15 @@ class FFMontage:
                     current_frame_no += 1
                     bar.update(1)
 
-            except:
-                bar.close()
-                cap.release()
-                shutil.rmtree('temp/')
-                print(sys.exc_info())
-                return
+            #except:
+             #   bar.close()
+              #  cap.release()
+               # shutil.rmtree('temp/')
+                #print(sys.exc_info())
+                #return
         bar.close()
         cap.release()
         string = f'ffmpeg -r {fps} -i {self.output_dir}/%d.jpg -c:v libx264 -pix_fmt yuv420p -crf 23 -r {fps} -y montage.mp4'
         subprocess.run([string], shell=True)
+        
         
