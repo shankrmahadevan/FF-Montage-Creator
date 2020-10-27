@@ -32,11 +32,11 @@ class FFMontage:
         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
-        output = f'{self.model_path}/model.zip'
-        gdown.download(url, output, quiet=True)
-        with ZipFile(f'{self.model_path}/model.zip') as zipf:
-            os.mkdir(f'{self.model_path}/dir')
-            zipf.extractall(f'{self.model_path}/dir')
+            output = f'{self.model_path}/model.zip'
+            gdown.download(url, output, quiet=True)
+            with ZipFile(f'{self.model_path}/model.zip') as zipf:
+                os.mkdir(f'{self.model_path}/dir')
+                zipf.extractall(f'{self.model_path}/dir')
         model = tf.keras.models.load_model(f'{self.model_path}/dir')
         return model
 
