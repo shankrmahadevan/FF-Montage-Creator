@@ -96,7 +96,7 @@ class FFMontage:
                 i += 1
                 current_frame_no += 1
                 bar.update(1)
-              start_time = self.time_to_str(current_time.time()) - self.time_interval
+              start_time = max(self.time_to_str(current_time.time()) - self.time_interval, 0)
               end_time = self.time_to_str(current_time.time()) + self.time_interval
               movie = VideoFileClip(self.video_path).subclip(start_time, end_time)
               movie.write_videofile(f"{self.concat_dir}/{vid_no}.mp4")
