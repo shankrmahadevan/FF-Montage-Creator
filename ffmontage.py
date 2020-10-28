@@ -63,7 +63,7 @@ class FFMontage:
     
     def time_to_str(self, timestr):
       ftr = [3600,60,1]
-      return sum([a*b for a,b in zip(ftr, map(float,timestr.split(':')))])
+      return sum([a*b for a,b in zip(ftr, map(float,str(timestr).split(':')))])
 
     def video_process(self):
       self.download_video()
