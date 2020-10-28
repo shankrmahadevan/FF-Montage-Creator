@@ -62,6 +62,8 @@ class FFMontage:
 
     def video_process(self):
         self.download_video()
+        array = []
+        done = 0 
         text_file = open('temp/text_file.txt', 'a')
         if not os.path.exists(self.concat_dir):
             os.mkdir(self.concat_dir)
@@ -90,10 +92,15 @@ class FFMontage:
                     if self.is_true(frame):
                         end_time = current_time + datetime.timedelta(seconds=self.time_interval)
                         i = 0
+                        for img in array:
+                            cv2.imwrite(f'temp/frames/{str(done)}.jpg', img)
+                            done+=1
                         while cap.isOpened() and i < self.time_interval * fps:
                             ret, frame = cap.read()
                             if not ret:
                                 break
+                            cv2.imwrite(f'temp/frames/{str(done)}.jpg', frame)
+                            done+=1
                             current_frame_no += 1
                             bar.update(1)
                             i += 1
@@ -109,6 +116,9 @@ class FFMontage:
                         current_frame_no += 1
                         bar.update(1)
                 else:
+                    array.append(frame)
+                    if len(array)>buffer_size:
+                        array = array[1:]
                     current_frame_no += 1
                     bar.update(1)
 
@@ -124,8 +134,9 @@ class FFMontage:
         text_file.close()
         now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
         concat_file_name = f'{now}.mp4'
+        subprocess.run([f'ffmpeg -i temp/frames/%d.jpg -c:v libx264 -pix_fmt yuv420p -crf 23 -preset ultrafast -y output.mp4 -async 1 -vsync 1'], shell=True)
 #         ffmpeg_cmd = f"ffmpeg -safe 0 -f concat -segment_time_metadata 1 -i temp/text_file.txt -vf select=concatdec_select -af aselect=concatdec_select,aresample=async=1 -preset ultrafast -max_muxing_queue_size 9999 " + concat_file_name
-        ffmpeg_cmd = f'ffmpeg -i temp/text_file.txt -acodec copy audio.mp3'
-        subprocess.run([ffmpeg_cmd], shell=True)
+#         ffmpeg_cmd = f'ffmpeg -i temp/text_file.txt -acodec copy audio.mp3'
+#         subprocess.run([ffmpeg_cmd], shell=True)
 #         shutil.rmtree('temp/')
         
