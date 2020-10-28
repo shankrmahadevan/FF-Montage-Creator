@@ -100,7 +100,7 @@ class FFMontage:
               start_time = max(self.time_to_str(current_time.time()) - self.time_interval, 0)
               end_time = self.time_to_str(current_time.time()) + self.time_interval
               movie = VideoFileClip(self.video_path).subclip(start_time, end_time)
-              movie.write_videofile(f"{self.concat_dir}/{vid_no}.mp4")
+              movie.write_videofile(f"{self.concat_dir}/{vid_no}.mp4", verbose=False, progress_bar=False)
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
               current_time += datetime.timedelta(seconds=self.time_interval)
@@ -120,9 +120,10 @@ class FFMontage:
       cap.release()
       now = datetime.datetime.today().strftime("Montage_%D %H_%M_%S")
       concat_file_name = f'{now}.mp4'
-      video_files = sorted(glob.glob(self.concat_dir+'/**'), key=lambda x: int(x.split('/')[-1].split('.')[0]))
+      video_files = [VideoFileClip(video) for video in sorted(glob.glob(self.concat_dir+'/**'), key=lambda x: int(x.split('/')[-1].split('.')[0]))]
       final_clip = concatenate_videoclips(video_files)
-      final_clip.write_videofile(concat_file_name)
+      final_clip.write_videofile(concat_file_name, verbose=False, progress_bar=False)
+      shutil.rmtree('temp/')
 
 #     def video_process(self):
 #         self.download_video()
