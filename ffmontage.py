@@ -52,8 +52,6 @@ class FFMontage:
     def download_video(self):
         if not os.path.exists('temp'):
             os.mkdir('temp')
-        if not os.path.exists('temp/frames'):
-            os.mkdir('temp/frames')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive Link   ")
         if 'drive' in link:
@@ -93,7 +91,7 @@ class FFMontage:
               i = 0
               while i < buffer_size :
                 ret, frame = cap.read()
-                if not frame:
+                if not ret:
                   break
                 i += 1
                 current_frame_no += 1
@@ -102,6 +100,7 @@ class FFMontage:
               end_time = self.time_to_str(current_time.time()) + self.time_interval
               movie = VideoFileClip(self.video_path).subclip(start_time, end_time)
               movie.write_videofile(f"{self.concat_dir}/{vid_no}.mp4")
+              bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
             else:
               current_frame_no += 1
@@ -112,7 +111,6 @@ class FFMontage:
         except:
           bar.close()
           cap.release()
-          text_file.close()
           shutil.rmtree('temp/')
           print(sys.exc_info())
           return
