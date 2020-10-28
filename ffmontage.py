@@ -86,6 +86,7 @@ class FFMontage:
           ret, frame = cap.read()
           if not ret:
             break
+          current_time += datetime.timedelta(seconds=seconds_per_frame)
           if current_frame_no%divisor==0:
             if self.is_true(frame):
               i = 0
@@ -102,6 +103,7 @@ class FFMontage:
               movie.write_videofile(f"{self.concat_dir}/{vid_no}.mp4")
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
+              current_time += datetime.timedelta(seconds=self.time_interval)
             else:
               current_frame_no += 1
               bar.update(1)
