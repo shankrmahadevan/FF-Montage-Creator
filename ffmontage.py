@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
-from np import array
+from numpy import array
 
 import tensorflow as tf
 
