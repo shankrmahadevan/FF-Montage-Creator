@@ -123,6 +123,6 @@ class FFMontage:
       with open('txt1.txt', 'a') as text_file:
           for file in sorted(glob.glob('temp/to_concat'+'/**'), key=lambda x: int(x.split('/')[-1].split('.')[0])):
             text_file.write('file '+file+'\n')
-      subprocess.run(f'ffmpeg -f concat -safe 0 -i txt1.txt -c copy -preset ultrafast {concat_file_name}', shell=True)
+      subprocess.run(f'ffmpeg -f concat -safe 0 -i txt1.txt -c copy -preset fast {concat_file_name}', shell=True)
       shutil.rmtree('temp/')
         
