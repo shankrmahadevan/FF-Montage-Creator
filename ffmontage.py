@@ -125,7 +125,7 @@ class FFMontage:
             text_file.write('file '+file+'\n')
       print('Starting Concatanation...')
       subprocess.run(f'ffmpeg -f concat -safe 0 -i txt1.txt -c copy -preset fast {concat_file_name}', shell=True)
-#       os.remove('txt1.txt')
       print('Process Complete')
-#       shutil.rmtree('temp/')
+      os.remove('txt1.txt')
+      shutil.rmtree('temp/')
         
