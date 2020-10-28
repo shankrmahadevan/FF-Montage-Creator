@@ -67,7 +67,7 @@ class FFMontage:
       ftr = [3600,60,1]
       return sum([a*b for a,b in zip(ftr, map(float,timestr.split(':')))])
 
-    def video_process():
+    def video_process(self):
       self.download_video()
       array = []
       if not os.path.exists(self.concat_dir):
