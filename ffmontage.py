@@ -61,7 +61,7 @@ class FFMontage:
             print("Check Your Link")
         return
     
-    def time_to_str(timestr):
+    def time_to_str(self, timestr):
       ftr = [3600,60,1]
       return sum([a*b for a,b in zip(ftr, map(float,timestr.split(':')))])
 
