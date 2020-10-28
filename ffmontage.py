@@ -51,6 +51,8 @@ class FFMontage:
     def download_video(self):
         if not os.path.exists('temp'):
             os.mkdir('temp')
+        if not os.path.exists('temp/frames'):
+            os.mkdir('temp/frames')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive Link   ")
         if 'drive' in link:
