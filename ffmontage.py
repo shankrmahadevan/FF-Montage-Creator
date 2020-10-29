@@ -28,7 +28,8 @@ class FFMontage:
         self.txt_concat = 'to_concat'
 
     def download_model(self):
-        url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
+#         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
+        url = 'https://drive.google.com/uc?id=1-alf0pvQW6ixVv-wOpDoG8oHQyGxMy2A'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
             output = f'{self.model_path}/model.zip'
