@@ -8,6 +8,7 @@ import gdown
 import subprocess
 from datetime import datetime, timedelta
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
@@ -101,8 +102,9 @@ class FFMontage:
                 bar.update(1)
               start_time = max(time_to_str(current_time.time()) - time_interval, 0)
               end_time = time_to_str(current_time.time()) + time_interval
-              movie = VideoFileClip('temp/download.mp4').subclip(start_time, end_time)
-              movie.write_videofile(f"temp/to_concat/{vid_no}.mp4", verbose=False, progress_bar=False)
+#               movie = VideoFileClip('temp/download.mp4').subclip(start_time, end_time)
+#               movie.write_videofile(f"temp/to_concat/{vid_no}.mp4", verbose=False, progress_bar=False)
+              ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
               current_time += timedelta(seconds=time_interval)
