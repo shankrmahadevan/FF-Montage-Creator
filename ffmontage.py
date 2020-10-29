@@ -84,6 +84,7 @@ class FFMontage:
       time_interval = self.time_interval
       read = cap.read
       text_trap = io.StringIO()
+      latest_end = 4
       
       while cap.isOpened():
         try:
@@ -104,7 +105,9 @@ class FFMontage:
                 current_frame_no += 1
                 bar.update(1)
               start_time = max(time_to_str(current_time.time()) - time_interval, 0)
+              start_time = min(start_time, latest_end)
               end_time = time_to_str(current_time.time()) + time_interval
+              latest_end = end_time
 #               movie = VideoFileClip('temp/download.mp4').subclip(start_time, end_time)
 #               movie.write_videofile(f"temp/to_concat/{vid_no}.mp4", verbose=False, progress_bar=False)
               sys.stdout = text_trap
