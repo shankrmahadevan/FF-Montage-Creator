@@ -72,7 +72,7 @@ class FFMontage:
       cap = VideoCapture(self.video_path)
       total_frames = int(cap.get(CAP_PROP_FRAME_COUNT))
       fps = cap.get(CAP_PROP_FPS)
-      buffer_size = self.time_interval * fps
+      buffer_size = self.time_interval * fps * 1.25
       current_frame_no = 0
       divisor = fps // 3
       seconds_per_frame = 1 / fps
