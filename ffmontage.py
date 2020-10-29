@@ -76,7 +76,7 @@ class FFMontage:
       current_frame_no = 0
       divisor = fps // 3
       seconds_per_frame = 1 / fps
-      vid_no = 0
+      vid_no = 1
       bar = tqdm(total=total_frames)
       predict = self.model.predict
       input_image = self.input_image
