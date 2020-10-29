@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 import sys
+import io
 from tqdm import tqdm
 from zipfile import ZipFile
 import gdown
@@ -81,6 +82,7 @@ class FFMontage:
       current_time = datetime(1, 2, 3, hour=0, minute=0, second=0)
       time_interval = self.time_interval
       read = cap.read
+      text_trap = io.StringIO()
       
       while cap.isOpened():
         try:
@@ -104,7 +106,9 @@ class FFMontage:
               end_time = time_to_str(current_time.time()) + time_interval
 #               movie = VideoFileClip('temp/download.mp4').subclip(start_time, end_time)
 #               movie.write_videofile(f"temp/to_concat/{vid_no}.mp4", verbose=False, progress_bar=False)
+              sys.stdout = text_trap
               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
+              sys.stdout = sys.__stdout__
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
               current_time += timedelta(seconds=time_interval)
