@@ -136,4 +136,7 @@ class FFMontage:
       print('Process Complete')
       os.remove('txt1.txt')
       shutil.rmtree('temp/')
+      if not os.path.exists('drive/My Drive/Free Fire Montage'):
+            os.mkdir('drive/My Drive/Free Fire Montage')
+      shutil.copy(concat_file_name, 'drive/My Drive/Free Fire Montage')
         
