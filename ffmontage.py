@@ -104,7 +104,7 @@ class FFMontage:
               end_time = time_to_str(current_time.time()) + time_interval
 #               movie = VideoFileClip('temp/download.mp4').subclip(start_time, end_time)
 #               movie.write_videofile(f"temp/to_concat/{vid_no}.mp4", verbose=False, progress_bar=False)
-              ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4', logger=None)
+              ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
               current_time += timedelta(seconds=time_interval)
