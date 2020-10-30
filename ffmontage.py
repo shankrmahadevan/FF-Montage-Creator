@@ -83,7 +83,7 @@ class FFMontage:
       time_interval = self.time_interval
       read = cap.read
       text_trap = io.StringIO()
-#       last_end = 0
+      last_end = 0
       
       while cap.isOpened():
         try:
@@ -104,9 +104,9 @@ class FFMontage:
                 current_frame_no += 1
                 bar.update(1)
               start_time = max(time_to_str(current_time.time()) - time_interval, 0)
-#               start_time = max(start_time, last_end)
+              start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-#               last_end = end_time
+              last_end = end_time
               sys.stdout = text_trap
               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
               sys.stdout = sys.__stdout__
