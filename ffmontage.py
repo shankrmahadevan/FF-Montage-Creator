@@ -64,6 +64,7 @@ class FFMontage:
       return sum([a*b for a,b in zip(ftr, map(float,str(timestr).split(':')))])
 
     def video_process(self):
+      arr12 = []
       self.download_video()
       if not os.path.exists(self.concat_dir):
           os.mkdir(self.concat_dir)
@@ -104,8 +105,10 @@ class FFMontage:
                 current_frame_no += 1
                 bar.update(1)
               start_time = max(time_to_str(current_time.time()) - time_interval, 0)
+              str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
+              arr12.append([str1, start_time, end_time, last_end])
               last_end = end_time
               sys.stdout = text_trap
               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
@@ -140,4 +143,5 @@ class FFMontage:
       if not os.path.exists('drive/My Drive/Free Fire Montage'):
             os.mkdir('drive/My Drive/Free Fire Montage')
       shutil.copy(concat_file_name, 'drive/My Drive/Free Fire Montage')
+      print(arr12)
         
