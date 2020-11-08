@@ -95,7 +95,7 @@ class FFMontage:
           current_time += timedelta(seconds=seconds_per_frame)
           if current_frame_no%divisor==0:
             image_in = array([input_image(frame)])
-            flag = predict(image_in)[0][0] > 0.8
+            flag = predict(image_in)[0][0] > 0.9
             if flag:
               i = 0
               while i < buffer_size :
