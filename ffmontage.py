@@ -29,7 +29,7 @@ class FFMontage:
 
     def download_model(self):
 #         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
-        url = 'https://drive.google.com/uc?id=108ZvSf9lgQUesxqdcnunlWZ7k6WXR2NX'
+        url = 'https://drive.google.com/uc?id=1-3VY7UBprq82D-JErh6W1wZSC1cdOCLc'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
             output = f'{self.model_path}/model.zip'
