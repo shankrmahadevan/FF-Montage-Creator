@@ -68,6 +68,23 @@ class FFMontage:
     def time_to_str(self, timestr):
       ftr = [3600,60,1]
       return sum([a*b for a,b in zip(ftr, map(float,str(timestr).split(':')))])
+    
+    def ffmpeg_extract_subclip(filename, t1, t2, targetname=None):
+        """ makes a new video file playing video file ``filename`` between
+            the times ``t1`` and ``t2``. """
+        name,ext = os.path.splitext(filename)
+        if not targetname:
+            T1, T2 = [int(1000*t) for t in [t1, t2]]
+            targetname = name+ "%sSUB%d_%d.%s"(name, T1, T2, ext)
+
+        cmd = [get_setting("FFMPEG_BINARY"),"-y",
+          "-ss", "%0.2f"%t1,
+          "-t", "%0.2f"%(t2-t1),
+          "-i", filename,
+          "-vcodec", "copy", "-acodec", "copy", "-c:v", "libx264", "-avoid_negative_ts", "make_zero", targetname]
+
+        subprocess_call(cmd)
+
 
     def video_process(self):
       arr12 = []
@@ -115,7 +132,7 @@ class FFMontage:
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
               if end_time-last_end<6:
-                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -crf 27 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
+                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
               else:
                   sys.stdout = text_trap
                   ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
