@@ -117,11 +117,11 @@ class FFMontage:
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
               if end_time-last_end<6:
-                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
+                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -crf 28 -preset ultrafast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
               else:
                   sys.stdout = text_trap
                   ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-                  subprocess.run([f"ffmpeg -i temp/to_concat/{vid_no}.mp4 -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}_1.mp4"], shell=True)
+                  subprocess.run([f"ffmpeg -i temp/to_concat/{vid_no}.mp4 -c:v libx264 -crf 28 -preset ultrafast -b:v 0 -c:a copy temp/to_concat/{vid_no}_1.mp4"], shell=True)
                   os.remove(f'temp/to_concat/{vid_no}.mp4')
                   os.rename(f'temp/to_concat/{vid_no}_1.mp4', f'temp/to_concat/{vid_no}.mp4')
                   sys.stdout = sys.__stdout__
