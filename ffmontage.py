@@ -10,6 +10,8 @@ import subprocess
 from datetime import datetime, timedelta
 # from moviepy.editor import VideoFileClip, concatenate_videoclips
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+from moviepy.tools import subprocess_call
+from moviepy.config import get_setting
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
@@ -69,7 +71,7 @@ class FFMontage:
       ftr = [3600,60,1]
       return sum([a*b for a,b in zip(ftr, map(float,str(timestr).split(':')))])
     
-    def ffmpeg_extract_subclip(filename, t1, t2, targetname=None):
+    def ffmpeg_extract_subclip(self, filename, t1, t2, targetname=None):
         """ makes a new video file playing video file ``filename`` between
             the times ``t1`` and ``t2``. """
         name,ext = os.path.splitext(filename)
@@ -135,7 +137,7 @@ class FFMontage:
                     subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
               else:
                   sys.stdout = text_trap
-                  ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
+                  self.ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
                   sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
