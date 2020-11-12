@@ -8,7 +8,7 @@ from zipfile import ZipFile
 import gdown
 import subprocess
 from datetime import datetime, timedelta
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+# from moviepy.editor import VideoFileClip, concatenate_videoclips
 # from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.config import get_setting
 
@@ -131,8 +131,10 @@ class FFMontage:
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
               if end_time-last_end<6:
-                  clip = VideoFileClip('temp/download.mp4').cutout(start_time, end_time)
-                  clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False, threads=2)
+                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -crf 27 -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
+#                   clip = VideoFileClip('temp/download.mp4').cutout(start_time, end_time)
+#                   clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False, threads=2)
+
               else:
 #                   sys.stdout = text_trap
                   self.ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
