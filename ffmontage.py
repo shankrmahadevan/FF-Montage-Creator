@@ -63,14 +63,14 @@ class FFMontage:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, self.video_path, quiet=True)
         elif 'youtu' in link:
-            flag = False
             for i in range(10):
                 subprocess.run([f'youtube-dl -f mp4 {link}'], shell=True)
-                for item in glob.glob('temp'):
-                    if item.endswith('.mp4'):
-                        flag = True
-                        os.rename(item, 'temp/download.mp4')
-                        break
+                files = glob.glob('/content/*.mp4')
+                flag = len(files) == 1
+                if flag:
+                    os.move(files[0], 'temp/'+files[0])
+                    os.rename('temp/'+files[0], 'temp/download.mp4')
+                    break
             if not flag:
                 print('File Not Downloaded')
                 return False
