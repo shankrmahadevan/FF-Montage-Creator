@@ -131,7 +131,7 @@ class FFMontage:
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
               if end_time-last_end<6:
-                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -crf 27 -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
+                    subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -crf 27 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
 #                   clip = VideoFileClip('temp/download.mp4').cutout(start_time, end_time)
 #                   clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False, threads=2)
 
