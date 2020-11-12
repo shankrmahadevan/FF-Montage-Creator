@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 # from moviepy.editor import VideoFileClip, concatenate_videoclips
 # from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.config import get_setting
+from moviepy.tools import subprocess_call
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
