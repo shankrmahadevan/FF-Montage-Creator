@@ -121,7 +121,7 @@ class FFMontage:
               else:
                   sys.stdout = text_trap
                   ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-                  subprocess.run([f"ffmpeg -i temp/to_concat/{vid_no}.mp4 -c:v libx264 -c:a copy temp/to_concat/{vid_no}_1.mp4"], shell=True)
+                  subprocess.run([f"ffmpeg -i temp/to_concat/{vid_no}.mp4 -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}_1.mp4"], shell=True)
                   os.remove(f'temp/to_concat/{vid_no}.mp4')
                   os.rename(f'temp/to_concat/{vid_no}_1.mp4', f'temp/to_concat/{vid_no}.mp4')
                   sys.stdout = sys.__stdout__
