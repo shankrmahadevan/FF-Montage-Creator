@@ -9,7 +9,8 @@ import gdown
 import subprocess
 from datetime import datetime, timedelta
 from moviepy.editor import VideoFileClip, concatenate_videoclips
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+# from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+from moviepy.config import get_setting
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
@@ -51,6 +52,22 @@ class FFMontage:
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         return tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
 #         return img
+
+    def ffmpeg_extract_subclip(self, filename, t1, t2, targetname=None):
+        """ makes a new video file playing video file ``filename`` between
+            the times ``t1`` and ``t2``. """
+        name,ext = os.path.splitext(filename)
+        if not targetname:
+            T1, T2 = [int(1000*t) for t in [t1, t2]]
+            targetname = name+ "%sSUB%d_%d.%s"(name, T1, T2, ext)
+
+        cmd = [get_setting("FFMPEG_BINARY"),"-y",
+          "-ss", "%0.2f"%t1,
+          "-t", "%0.2f"%(t2-t1),
+          "-i", filename,
+          "-vcodec", "copy", "-acodec", "copy", "-avoid_negative_ts", "make_zero", targetname]
+
+        subprocess_call(cmd)
 
     def download_video(self):
         if not os.path.exists('temp'):
@@ -115,11 +132,11 @@ class FFMontage:
               end_time = time_to_str(current_time.time()) + time_interval
               if end_time-last_end<6:
                   clip = VideoFileClip('temp/download.mp4').cutout(start_time, end_time)
-                  clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False, threads=2)
+                  clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', logger=None, threads=2)
               else:
-                  sys.stdout = text_trap
-                  ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-                  sys.stdout = sys.__stdout__
+#                   sys.stdout = text_trap
+                  self.ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
+#                   sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
