@@ -8,7 +8,6 @@ from zipfile import ZipFile
 import gdown
 import subprocess
 from datetime import datetime, timedelta
-# from moviepy.editor import VideoFileClip, concatenate_videoclips
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
 
@@ -42,16 +41,10 @@ class FFMontage:
         return model
 
     def input_image(self, image_path):
-#         if type(image_path) == str:
-#             img = imread(image_path) / 255.
-#             img = resize(img, (299, 299))
-#         else:
-#             img = resize(image_path / 255., (299, 299))
         img = resize(image_path, (1280, 720))
         img = resize(img[50:500, 400:900], (224, 224))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         return tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
-#         return img
 
 
     def download_video(self):
@@ -85,6 +78,9 @@ class FFMontage:
 
 
     def video_process(self):
+      if not os.path.exists('drive'):
+        print("Mount Drive And Try Again...")
+        return
       flag = self.download_video()
       if not flag:
         return
