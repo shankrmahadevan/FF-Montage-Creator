@@ -29,7 +29,7 @@ class FFMontage:
 
     def download_model(self):
 #         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
-        url = 'https://drive.google.com/uc?id=1-3VY7UBprq82D-JErh6W1wZSC1cdOCLc'
+        url = 'https://drive.google.com/uc?id=1-6Lv8nfq-1ExFXo6YOSPZBY5w2vQCAFA'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
             output = f'{self.model_path}/model.zip'
@@ -41,12 +41,16 @@ class FFMontage:
         return model
 
     def input_image(self, image_path):
-        if type(image_path) == str:
-            img = imread(image_path) / 255.
-            img = resize(img, (299, 299))
-        else:
-            img = resize(image_path / 255., (299, 299))
-        return img
+#         if type(image_path) == str:
+#             img = imread(image_path) / 255.
+#             img = resize(img, (299, 299))
+#         else:
+#             img = resize(image_path / 255., (299, 299))
+        img = cv2.resize(image_path, (1280, 720))
+        img = cv2.resize(img[50:500, 400:900], (224, 224))
+        img_array = tf.keras.preprocessing.image.img_to_array(img)
+        return tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
+#         return img
 
     def download_video(self):
         if not os.path.exists('temp'):
