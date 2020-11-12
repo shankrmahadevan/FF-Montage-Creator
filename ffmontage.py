@@ -68,7 +68,7 @@ class FFMontage:
                 files = glob.glob('/content/*.mp4')
                 flag = len(files) == 1
                 if flag:
-                    os.move(files[0], 'temp/'+files[0])
+                    shutil.move(files[0], 'temp/'+files[0])
                     os.rename('temp/'+files[0], 'temp/download.mp4')
                     break
             if not flag:
