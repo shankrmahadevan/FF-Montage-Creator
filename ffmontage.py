@@ -46,8 +46,8 @@ class FFMontage:
 #             img = resize(img, (299, 299))
 #         else:
 #             img = resize(image_path / 255., (299, 299))
-        img = cv2.resize(image_path, (1280, 720))
-        img = cv2.resize(img[50:500, 400:900], (224, 224))
+        img = resize(image_path, (1280, 720))
+        img = resize(img[50:500, 400:900], (224, 224))
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         return tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
 #         return img
