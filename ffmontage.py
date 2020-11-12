@@ -58,13 +58,26 @@ class FFMontage:
         if not os.path.exists('temp'):
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
-        link = input("Enter The G-Drive Link   ")
+        link = input("Enter The G-Drive or Youtube Link   ")
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, self.video_path, quiet=True)
+        elif 'youtu' in link:
+            flag = False
+            for i in range(10):
+                subprocess.run([f'youtube-dl -f mp4 {link}'], shell=True)
+                for item in glob.glob('temp'):
+                    if item.endswith('.mp4'):
+                        flag = True
+                        os.rename(item, 'temp/download.mp4')
+                        break
+            if not flag:
+                print('File Not Downloaded')
+                return False
         else:
             print("Check Your Link")
-        return
+            return False
+        return True
     
     def time_to_str(self, timestr):
       ftr = [3600,60,1]
@@ -73,7 +86,9 @@ class FFMontage:
 
     def video_process(self):
       arr12 = []
-      self.download_video()
+      flag = self.download_video()
+      if not flag:
+        return
       if not os.path.exists(self.concat_dir):
           os.mkdir(self.concat_dir)
       cap = VideoCapture(self.video_path)
