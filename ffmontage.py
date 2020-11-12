@@ -10,8 +10,7 @@ import subprocess
 from datetime import datetime, timedelta
 # from moviepy.editor import VideoFileClip, concatenate_videoclips
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-from moviepy.tools import subprocess_call
-from moviepy.config import get_setting
+
 
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
@@ -70,22 +69,6 @@ class FFMontage:
     def time_to_str(self, timestr):
       ftr = [3600,60,1]
       return sum([a*b for a,b in zip(ftr, map(float,str(timestr).split(':')))])
-    
-    def ffmpeg_extract_subclip(self, filename, t1, t2, targetname=None):
-        """ makes a new video file playing video file ``filename`` between
-            the times ``t1`` and ``t2``. """
-        name,ext = os.path.splitext(filename)
-        if not targetname:
-            T1, T2 = [int(1000*t) for t in [t1, t2]]
-            targetname = name+ "%sSUB%d_%d.%s"(name, T1, T2, ext)
-
-        cmd = [get_setting("FFMPEG_BINARY"),"-y",
-          "-ss", "%0.2f"%t1,
-          "-t", "%0.2f"%(t2-t1),
-          "-i", filename,
-          "-vcodec", "copy", "-acodec", "copy", "-c:v", "libx264", "-avoid_negative_ts", "make_zero", targetname]
-
-        subprocess_call(cmd)
 
 
     def video_process(self):
@@ -137,7 +120,10 @@ class FFMontage:
                     subprocess.run([f"ffmpeg -i temp/download.mp4 -ss {start_time} -to {end_time} -c:v libx264 -preset fast -b:v 0 -c:a copy temp/to_concat/{vid_no}.mp4"], shell=True)
               else:
                   sys.stdout = text_trap
-                  self.ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
+                  ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
+                  subprocess.run([f"ffmpeg -i temp/to_concat/{vid_no}.mp4 -c:v libx264 -c:a copy temp/to_concat/{vid_no}_1.mp4"], shell=True)
+                  os.remove(f'temp/to_concat/{vid_no}.mp4')
+                  os.rename(f'temp/to_concat/{vid_no}_1.mp4', f'temp/to_concat/{vid_no}.mp4')
                   sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
