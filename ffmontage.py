@@ -68,8 +68,8 @@ class FFMontage:
                 files = glob.glob('/content/*.mp4')
                 flag = len(files) == 1
                 if flag:
-                    shutil.move(files[0], 'temp/'+files[0])
-                    os.rename('temp/'+files[0], 'temp/download.mp4')
+                    shutil.move(files[0], 'temp/'+files[0][1:].split('/')[1])
+                    os.rename('temp/'+files[0][1:].split('/')[1], 'temp/download.mp4')
                     break
             if not flag:
                 print('File Not Downloaded')
@@ -85,7 +85,6 @@ class FFMontage:
 
 
     def video_process(self):
-      arr12 = []
       flag = self.download_video()
       if not flag:
         return
@@ -165,5 +164,4 @@ class FFMontage:
       if not os.path.exists('drive/My Drive/Free Fire Montage'):
             os.mkdir('drive/My Drive/Free Fire Montage')
       shutil.copy(concat_file_name, 'drive/My Drive/Free Fire Montage')
-      print(arr12)
         
