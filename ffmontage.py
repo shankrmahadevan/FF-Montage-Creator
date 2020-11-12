@@ -113,9 +113,9 @@ class FFMontage:
               str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-              if end_time-last_end<8:
+              if end_time-last_end<6:
                   clip = VideoFileClip('temp/download.mp4').cutout(start_time, end_time)
-                  clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False)
+                  clip.write_videofile(f'temp/to_concat/{vid_no}.mp4', verbose=False, progress_bar=False, threads=2)
               else:
                   sys.stdout = text_trap
                   ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
