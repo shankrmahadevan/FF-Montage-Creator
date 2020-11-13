@@ -84,9 +84,10 @@ class FFMontage:
       if not os.path.exists('drive'):
         print("Mount Drive And Try Again...")
         return
-      flag = self.download_video()
-      if not flag:
-        return
+      self.download_video()
+#       flag = self.download_video()
+#       if not flag:
+#         return
       if not os.path.exists(self.concat_dir):
           os.mkdir(self.concat_dir)
       cap = VideoCapture(self.video_path)
