@@ -59,13 +59,13 @@ class FFMontage:
             gdown.download(video_link, self.video_path, quiet=True)
         elif 'youtu' in link:
             for i in range(10):
-                subprocess.run([f'youtube-dl -o download {link}'], shell=True)
-                files = glob.glob('/content/*.mp4') + glob.glob('/content/*.mkv') + glob.glob('/content/*.webm') 
+                subprocess.run([f'youtube-dl -f mp4 -o download {link}'], shell=True)
+#                 files = glob.glob('/content/*.mp4') + glob.glob('/content/*.mkv') + glob.glob('/content/*.webm') 
                 flag = len(files) == 1
                 if flag:
-                    if not files[0].endswith('.mp4'):
-                        subprocess.run([f'ffmpeg -i {files[0]} -crf 22 -preset ultrafast -tune zerolatency download.mp4'], shell=True)
-                    shutil.move(f'download.mp4', f'temp/download.{self.suffix}')
+#                     if not files[0].endswith('.mp4'):
+#                         subprocess.run([f'ffmpeg -i {files[0]} -crf 22 -preset ultrafast -tune zerolatency download.mp4'], shell=True)
+                    shutil.move(f'download.mp4', f'temp/download.mp4')
                     break
             if not flag:
                 print('File Not Downloaded')
