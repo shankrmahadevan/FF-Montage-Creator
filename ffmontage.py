@@ -26,7 +26,6 @@ class FFMontage:
         self.concat_dir = 'temp/to_concat'
         self.partition_cmds = []
         self.txt_concat = 'to_concat'
-        self.suffix = 'mp4'
 
     def download_model(self):
 #         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
@@ -53,7 +52,7 @@ class FFMontage:
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive or Youtube Link   ")
-        for video in glob.glob(f'/content/*.{self.suffix}'):
+        for video in glob.glob(f'/content/*.mp4'):
             os.remove(video)
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
@@ -64,8 +63,9 @@ class FFMontage:
                 files = glob.glob('/content/*.mp4') + glob.glob('/content/*.mkv') + glob.glob('/content/*.webm') 
                 flag = len(files) == 1
                 if flag:
-                    self.suffix = files[0].split('.')[-1]
-                    shutil.move(f'download.{self.suffix}', f'temp/download.{self.suffix}')
+                    if not files[0].endswith('.mp4'):
+                        subprocess.run([f'ffmpeg -i {files[0]} -crf 22 -preset ultrafast -tune zerolatency download.mp4'], shell=True)
+                    shutil.move(f'download.mp4', f'temp/download.{self.suffix}')
                     break
             if not flag:
                 print('File Not Downloaded')
@@ -131,7 +131,7 @@ class FFMontage:
               end_time = time_to_str(current_time.time()) + time_interval
               sys.stdout = text_trap
 #               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.{self.suffix} -ss 0 -c copy -t 4 -c:v libx264 -crf 22 -preset veryfast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -ss 0 -c copy -t 4 -c:v libx264 -crf 22 -preset veryfast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
               sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
