@@ -52,6 +52,8 @@ class FFMontage:
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive or Youtube Link   ")
+        for video in glob.glob('/content/*.mp4'):
+            os.remove(video)
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, self.video_path, quiet=True)
