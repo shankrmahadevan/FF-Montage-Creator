@@ -59,7 +59,7 @@ class FFMontage:
             gdown.download(video_link, self.video_path, quiet=True)
         elif 'youtu' in link:
             for i in range(10):
-                subprocess.run([f'youtube-dl -f mp4 -o download {link}'], shell=True)
+                subprocess.run([f'youtube-dl -f mp4 -o download.mp4 {link}'], shell=True)
                 files = glob.glob('/content/*.mp4') 
                 flag = len(files) == 1
                 if flag:
