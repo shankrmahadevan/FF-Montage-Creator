@@ -130,7 +130,7 @@ class FFMontage:
               end_time = time_to_str(current_time.time()) + time_interval
               sys.stdout = text_trap
 #               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -ss 0 -c copy -t 4 -c:v libx264 -crf 20 -preset slower -avoid_negative_ts make_zero temp/to_concat/{vid_no}.mp4'], shell=True)
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -ss 0 -c copy -t 4 -c:v libx264 -crf 20 -preset faster -avoid_negative_ts make_zero temp/to_concat/{vid_no}.mp4'], shell=True)
               sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
