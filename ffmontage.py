@@ -8,9 +8,6 @@ from zipfile import ZipFile
 import gdown
 import subprocess
 from datetime import datetime, timedelta
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-
-
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
 
@@ -18,7 +15,7 @@ import tensorflow as tf
 
 
 class FFMontage:
-    def __init__(self, time_interval=2):
+    def __init__(self, time_interval=3):
         self.video_path = 'temp/download.mp4'
         self.model_path = 'model'
         self.model = self.download_model()
@@ -29,7 +26,7 @@ class FFMontage:
 
     def download_model(self):
 #         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
-        url = 'https://drive.google.com/uc?id=1-6Lv8nfq-1ExFXo6YOSPZBY5w2vQCAFA'
+        url = 'https://drive.google.com/uc?id=1atj5c0SDDLE6Hz4dPELs07ej837zW7ir'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
             output = f'{self.model_path}/model.zip'
@@ -63,8 +60,6 @@ class FFMontage:
                 files = glob.glob('/content/*.mp4') 
                 flag = len(files) == 1
                 if flag:
-#                     if not files[0].endswith('.mp4'):
-#                         subprocess.run([f'ffmpeg -i {files[0]} -crf 22 -preset ultrafast -tune zerolatency download.mp4'], shell=True)
                     shutil.move(f'download.mp4', f'temp/download.mp4')
                     break
             if not flag:
@@ -82,12 +77,10 @@ class FFMontage:
 
     def video_process(self):
       if not os.path.exists('drive'):
-        print("Mount Drive And Try Again...")
+        print("Drive Not Mounted, So you not saved to Drive")
+      flag = self.download_video()
+      if not flag:
         return
-      self.download_video()
-#       flag = self.download_video()
-#       if not flag:
-#         return
       if not os.path.exists(self.concat_dir):
           os.mkdir(self.concat_dir)
       cap = VideoCapture(self.video_path)
@@ -130,10 +123,10 @@ class FFMontage:
               str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-              sys.stdout = text_trap
+#               sys.stdout = text_trap
 #               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -ss 0 -c copy -t 4 -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
-              sys.stdout = sys.__stdout__
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
+#               sys.stdout = sys.__stdout__
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
@@ -162,7 +155,8 @@ class FFMontage:
       print('Process Complete')
       os.remove('txt1.txt')
       shutil.rmtree('temp/')
-      if not os.path.exists('drive/My Drive/Free Fire Montage'):
-            os.mkdir('drive/My Drive/Free Fire Montage')
-      shutil.copy(concat_file_name, 'drive/My Drive/Free Fire Montage')
+      if os.path.exists('drive'):
+          if not os.path.exists('drive/My Drive/Free Fire Montage'):
+                os.mkdir('drive/My Drive/Free Fire Montage')
+          shutil.copy(concat_file_name, 'drive/My Drive/Free Fire Montage')
         
