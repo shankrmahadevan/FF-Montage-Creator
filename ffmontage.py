@@ -77,7 +77,7 @@ class FFMontage:
 
     def video_process(self):
       if not os.path.exists('drive'):
-        print("Drive Not Mounted, So you not saved to Drive")
+        print("Drive Not Mounted, So video will not be saved to Drive")
       flag = self.download_video()
       if not flag:
         return
