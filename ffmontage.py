@@ -100,6 +100,7 @@ class FFMontage:
       read = cap.read
       text_trap = io.StringIO()
       last_end = 0
+      text_dis = 'Made With FFMontage Extractor'
       
       while cap.isOpened():
         try:
@@ -123,10 +124,7 @@ class FFMontage:
               str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-#               sys.stdout = text_trap
-#               ffmpeg_extract_subclip('temp/download.mp4', start_time, end_time, f'temp/to_concat/{vid_no}.mp4')
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="text=FFMontage__Extractor: fontcolor=white: fontsize=20: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
-#               sys.stdout = sys.__stdout__
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="text={text_dis}: fontcolor=white: fontsize=15: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
