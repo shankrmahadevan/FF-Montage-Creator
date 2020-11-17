@@ -125,7 +125,7 @@ class FFMontage:
               str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="fontfile={ttf_path}: text={text_dis}: fontcolor=white: fontsize=15: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset fast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="fontfile={ttf_path}: text={text_dis}: fontcolor=white: fontsize=15: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset veryfast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
