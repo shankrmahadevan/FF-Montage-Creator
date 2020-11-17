@@ -18,20 +18,20 @@ class FFMontage:
     def __init__(self, time_interval=3):
         self.video_path = 'temp/download.mp4'
         self.model_path = 'model'
-        self.model = self.download_model()
+        self.model = self.load_model()
         self.time_interval = time_interval
         self.concat_dir = 'temp/to_concat'
         self.partition_cmds = []
         self.txt_concat = 'to_concat'
 
-    def download_model(self):
+    def load_model(self):
 #         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
-        url = 'https://drive.google.com/uc?id=1atj5c0SDDLE6Hz4dPELs07ej837zW7ir'
+#         url = 'https://drive.google.com/uc?id=1atj5c0SDDLE6Hz4dPELs07ej837zW7ir'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
-            output = f'{self.model_path}/model.zip'
-            gdown.download(url, output, quiet=True)
-            with ZipFile(f'{self.model_path}/model.zip') as zipf:
+#             output = f'{self.model_path}/model.zip'
+#             gdown.download(url, output, quiet=True)
+            with ZipFile(f'FF-Montage-Creator/mobilenet_model.zip') as zipf:
                 os.mkdir(f'{self.model_path}/dir')
                 zipf.extractall(f'{self.model_path}/dir')
         model = tf.keras.models.load_model(f'{self.model_path}/dir')
@@ -101,6 +101,7 @@ class FFMontage:
       text_trap = io.StringIO()
       last_end = 0
       text_dis = 'Made With FFMontage Extractor'
+      ttf_path = 'FF-Montage_Creator/font.ttf'
       
       while cap.isOpened():
         try:
@@ -124,7 +125,7 @@ class FFMontage:
               str1 = start_time
               start_time = max(start_time, last_end)
               end_time = time_to_str(current_time.time()) + time_interval
-              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="text={text_dis}: fontcolor=white: fontsize=15: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
+              subprocess.run([f'ffmpeg -ss {start_time} -i temp/download.mp4 -vf drawtext="fontfile={ttf_path}: text={text_dis}: fontcolor=white: fontsize=15: x=0: y=0" -ss 0 -c copy -t {time_interval*2} -c:v libx264 -crf 26 -preset ultrafast -avoid_negative_ts make_zero -tune film temp/to_concat/{vid_no}.mp4'], shell=True)
               last_end = end_time
               bar.set_postfix_str(f'Partitions : {vid_no}')
               vid_no += 1
