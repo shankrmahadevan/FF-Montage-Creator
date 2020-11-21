@@ -46,10 +46,6 @@ class FFMontage:
 
 
     def download_video(self):
-        try:
-            self.time_interval = time_ext
-        except:
-            self.time_interval = self.time_interval
         if not os.path.exists('temp'):
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
@@ -60,12 +56,14 @@ class FFMontage:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
             gdown.download(video_link, self.video_path, quiet=True)
         elif 'youtu' in link:
+            print('Starting to Download Video')
             for i in range(10):
                 subprocess.run([f'youtube-dl -f mp4 -o download.mp4 {link}'], shell=True)
                 files = glob.glob('/content/*.mp4') 
                 flag = len(files) == 1
                 if flag:
                     shutil.move(f'download.mp4', f'temp/download.mp4')
+                    print('Video Downloaded.')
                     break
             if not flag:
                 print('File Not Downloaded')
