@@ -89,7 +89,11 @@ class FFMontage:
       buffer_size = self.time_interval * fps
       current_frame_no = 0
       divisor = fps // 3
-      seconds_per_frame = 1 / fps
+      try:
+        seconds_per_frame = 1 / fps
+      except ZeroDivisionError:
+        fps = 30
+        seconds_per_frame = 1 / fps
       vid_no = 1
       bar = tqdm(total=total_frames)
       predict = self.model.predict
