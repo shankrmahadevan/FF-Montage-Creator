@@ -10,6 +10,7 @@ import subprocess
 from datetime import datetime, timedelta
 from cv2 import imread, resize, VideoCapture, CAP_PROP_FRAME_COUNT, CAP_PROP_FPS
 from numpy import array
+from moviepy.editor import VideoFileClip
 
 import tensorflow as tf
 
@@ -85,15 +86,17 @@ class FFMontage:
           os.mkdir(self.concat_dir)
       cap = VideoCapture(self.video_path)
       total_frames = int(cap.get(CAP_PROP_FRAME_COUNT))
-      fps = cap.get(CAP_PROP_FPS)
+      fps = int(cap.get(CAP_PROP_FPS))
+      if fps==0:
+            vid_1 = VideoFileClip(self.video_path)
+            fps = int(vid_1.fps)
+            if fps==0:
+                print('The video is corrupted, try with someother video...')
+                return
       buffer_size = self.time_interval * fps
       current_frame_no = 0
       divisor = fps // 3
-      try:
-        seconds_per_frame = 1 / fps
-      except ZeroDivisionError:
-        fps = 30
-        seconds_per_frame = 1 / fps
+      seconds_per_frame = 1 / fps
       vid_no = 1
       bar = tqdm(total=total_frames)
       predict = self.model.predict
