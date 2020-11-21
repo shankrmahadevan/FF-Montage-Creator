@@ -46,6 +46,10 @@ class FFMontage:
 
 
     def download_video(self):
+        try:
+            self.time_interval = time_ext
+        except:
+            self.time_interval = self.time_interval
         if not os.path.exists('temp'):
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
