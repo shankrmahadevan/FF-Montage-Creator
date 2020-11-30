@@ -47,7 +47,7 @@ class FFMontage:
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive or Youtube Link   ")
-        for video in glob.glob(f'{self.root_dir}/*.mp4'):
+        for video in glob.glob(f'/content/*.mp4'):
             os.remove(video)
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
@@ -56,7 +56,7 @@ class FFMontage:
             print('Starting to Download Video')
             for i in range(10):
                 subprocess.run([f'youtube-dl -f mp4 -o download.mp4 {link}'], shell=True)
-                files = glob.glob('{self.root_dir}/*.mp4') 
+                files = glob.glob('/content/*.mp4') 
                 flag = len(files) == 1
                 if flag:
                     shutil.move(f'download.mp4', f'temp/download.mp4')
