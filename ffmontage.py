@@ -24,14 +24,11 @@ class FFMontage:
         self.concat_dir = 'temp/to_concat'
         self.partition_cmds = []
         self.txt_concat = 'to_concat'
+        self.root_dir = '/content'
 
     def load_model(self):
-#         url = 'https://drive.google.com/uc?id=18qrmcnwNXubyDizyddri_FSmIoyfuHK8'
-#         url = 'https://drive.google.com/uc?id=1atj5c0SDDLE6Hz4dPELs07ej837zW7ir'
         if not os.path.exists(self.model_path):
             os.mkdir(self.model_path)
-#             output = f'{self.model_path}/model.zip'
-#             gdown.download(url, output, quiet=True)
             with ZipFile(f'FF-Montage-Creator/mobilenet_model.zip') as zipf:
                 os.mkdir(f'{self.model_path}/dir')
                 zipf.extractall(f'{self.model_path}/dir')
@@ -50,7 +47,7 @@ class FFMontage:
             os.mkdir('temp')
         print("Make Sure that You have turned on Share with Everybody")
         link = input("Enter The G-Drive or Youtube Link   ")
-        for video in glob.glob(f'/content/*.mp4'):
+        for video in glob.glob(f'{self.root_dir}/*.mp4'):
             os.remove(video)
         if 'drive' in link:
             video_link = link.replace('file/d/', 'uc?id=').rstrip('/view?usp=sharing')
@@ -59,7 +56,7 @@ class FFMontage:
             print('Starting to Download Video')
             for i in range(10):
                 subprocess.run([f'youtube-dl -f mp4 -o download.mp4 {link}'], shell=True)
-                files = glob.glob('/content/*.mp4') 
+                files = glob.glob('{self.root_dir}/*.mp4') 
                 flag = len(files) == 1
                 if flag:
                     shutil.move(f'download.mp4', f'temp/download.mp4')
